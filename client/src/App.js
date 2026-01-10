@@ -6,24 +6,29 @@ function App() {
   const [title, setTitle] = useState('');
 
   useEffect(() => {
-    fetch('/tasks')
+    fetch('/api/tasks')
       .then((r) => r.json())
       .then(setTasks)
       .catch(console.error);
   }, []);
 
+  const [priority, setPriority] = useState('Medium');
+  const [assignedTo, setAssignedTo] = useState('');
+
   const addTask = async (e) => {
     e.preventDefault();
     if (!title) return;
     try {
-      const res = await fetch('/tasks', {
+      const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title, priority, assignedTo }),
       });
       const newTask = await res.json();
       setTasks((s) => [...s, newTask]);
       setTitle('');
+      setPriority('Medium');
+      setAssignedTo('');
     } catch (err) {
       console.error(err);
     }
@@ -31,7 +36,7 @@ function App() {
 
   const toggle = async (task) => {
     try {
-      const res = await fetch(`/tasks/${task.id}`, {
+      const res = await fetch(`/api/tasks/${task.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ completed: !task.completed }),
@@ -45,12 +50,27 @@ function App() {
 
   const remove = async (id) => {
     try {
-      await fetch(`/tasks/${id}`, { method: 'DELETE' });
+      await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
       setTasks((s) => s.filter((t) => t.id !== id));
     } catch (err) {
       console.error(err);
     }
   };
+
+    // Filters
+    const [statusFilter, setStatusFilter] = useState('All');
+    const [priorityFilter, setPriorityFilter] = useState('All');
+    const [assignedFilter, setAssignedFilter] = useState('All');
+
+    const assignedOptions = Array.from(new Set(tasks.map((t) => t.assignedTo))).filter(Boolean);
+
+    const filteredTasks = tasks.filter((t) => {
+      if (statusFilter === 'Active' && t.completed) return false;
+      if (statusFilter === 'Completed' && !t.completed) return false;
+      if (priorityFilter !== 'All' && t.priority !== priorityFilter) return false;
+      if (assignedFilter !== 'All' && t.assignedTo !== assignedFilter) return false;
+      return true;
+    });
 
   return (
     <div className="App">
@@ -60,23 +80,52 @@ function App() {
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Add a new task"
+            placeholder="Title"
+          />
+          <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+          </select>
+          <input
+            value={assignedTo}
+            onChange={(e) => setAssignedTo(e.target.value)}
+            placeholder="Assigned to"
           />
           <button type="submit">Add</button>
         </form>
 
+        <div style={{display:'flex',gap:8,marginBottom:12}}>
+          <select value={statusFilter} onChange={(e)=>setStatusFilter(e.target.value)}>
+            <option value="All">All status</option>
+            <option value="Active">Active</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <select value={priorityFilter} onChange={(e)=>setPriorityFilter(e.target.value)}>
+            <option value="All">All priority</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
+          <select value={assignedFilter} onChange={(e)=>setAssignedFilter(e.target.value)}>
+            <option value="All">All assignees</option>
+            {assignedOptions.map(a => <option key={a} value={a}>{a}</option>)}
+          </select>
+        </div>
+
         <ul className="task-list">
-          {tasks.map((t) => (
+          {filteredTasks.map((t) => (
             <li key={t.id} className={t.completed ? 'done' : ''}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={t.completed}
-                  onChange={() => toggle(t)}
-                />
-                <span>{t.title}</span>
-              </label>
-              <button onClick={() => remove(t.id)}>Delete</button>
+              <div style={{display:'flex',alignItems:'center',gap:12}}>
+                <input type="checkbox" checked={t.completed} onChange={()=>toggle(t)} />
+                <div style={{textAlign:'left'}}>
+                  <div><strong>{t.title}</strong></div>
+                  <div style={{fontSize:12,color:'#6b7280'}}>{t.priority} • {t.assignedTo}</div>
+                </div>
+              </div>
+              <div>
+                <button onClick={() => remove(t.id)}>Delete</button>
+              </div>
             </li>
           ))}
         </ul>
