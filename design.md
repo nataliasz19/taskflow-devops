@@ -24,51 +24,28 @@ Each task includes:
   "title": "Deploy backend service",
   "completed": false,
   "priority": "High",
-  "assignedTo": "DevOps Team"
-}
-```
+  "assignedTo": "Operations Team"
+[
+  {
+    "id": "uuid-1",
+    "title": "Prepare monthly operations report",
+    "completed": false,
+    "priority": "Medium",
+    "assignedTo": "Operations Team"
+  },
+  {
+    "id": "uuid-2",
+    "title": "Update internal knowledge base",
+    "completed": true,
+    "priority": "Low",
+    "assignedTo": "Bench Team"
+  },
+  {
+    "id": "uuid-3",
+    "title": "Review project onboarding checklist",
+    "completed": false,
+    "priority": "High",
+    "assignedTo": "Operations Team"
+  }
+]
 
-This model keeps the domain simple but supports realistic demo scenarios (assignment, priority, filters).
-
-## Minimal API summary
-- `GET /tasks` — list tasks
-- `POST /tasks` — create task { title, priority?, assignedTo? }
-- `PUT /tasks/:id` — update fields including `completed`, `title`, `priority`, `assignedTo`
-- `DELETE /tasks/:id` — remove task
-
-Responses use JSON and standard HTTP status codes. Validation: `title` required on create; `priority` enum (Low/Medium/High) recommended.
-
-## Run locally (developer flow)
-1. Start backend:
-
-```bash
-cd Server
-node server.js
-```
-
-2. Start frontend:
-
-```bash
-cd client
-npm start
-```
-
-The React dev server proxies API requests to `http://localhost:5000` (see `client/package.json`).
-
-## CI/CD & Infra notes (scaffold)
-- CI: run ESLint, unit tests, and build checks on pushes/PRs.
-- CD: build Docker images, push to ECR, run Terraform apply targeting a staging workspace, update ECS service image.
-- Secrets: store DB credentials and other secrets in AWS Secrets Manager or Parameter Store; grant least-privilege to GitHub Actions via OIDC.
-
-## Out of scope (intentionally)
-- Authentication/authorization
-- Notifications and webhooks
-- Complex RBAC or multi-tenant support
-
-## Next recommended steps
-1. Create `docs/api.md` with full request/response examples and validation rules.
-2. Add `Server/Dockerfile` and `client/Dockerfile` for container builds.
-3. Add GitHub Actions workflows for CI and CD scaffolding.
-
----
-Generated as the living design doc for the TaskFlow demo application.

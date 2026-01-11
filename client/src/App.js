@@ -14,6 +14,8 @@ function App() {
 
   const [priority, setPriority] = useState('Medium');
   const [assignedTo, setAssignedTo] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showArchived, setShowArchived] = useState(false);
 
   const addTask = async (e) => {
     e.preventDefault();
@@ -57,6 +59,20 @@ function App() {
     }
   };
 
+  const toggleArchive = async (task) => {
+    try {
+      const res = await fetch(`/api/tasks/${task.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ archived: !task.archived })
+      });
+      const updated = await res.json();
+      setTasks((s) => s.map((t) => (t.id === updated.id ? updated : t)));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
     // Filters
     const [statusFilter, setStatusFilter] = useState('All');
     const [priorityFilter, setPriorityFilter] = useState('All');
@@ -69,6 +85,11 @@ function App() {
       if (statusFilter === 'Completed' && !t.completed) return false;
       if (priorityFilter !== 'All' && t.priority !== priorityFilter) return false;
       if (assignedFilter !== 'All' && t.assignedTo !== assignedFilter) return false;
+      if (searchTerm) {
+        const name = (t.name || t.title || '').toLowerCase();
+        if (!name.includes(searchTerm.toLowerCase())) return false;
+      }
+      if (!showArchived && t.archived) return false;
       return true;
     });
 
@@ -94,6 +115,19 @@ function App() {
           />
           <button type="submit">Add</button>
         </form>
+
+        <div style={{display:'flex',gap:8,marginBottom:12,alignItems:'center'}}>
+          <input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by name"
+            style={{padding:8,borderRadius:6,border:'1px solid #e6e9ef',flex:1}}
+          />
+          <label style={{display:'flex',alignItems:'center',gap:6}}>
+            <input type="checkbox" checked={showArchived} onChange={(e)=>setShowArchived(e.target.checked)} />
+            <span style={{fontSize:12}}>Show archived</span>
+          </label>
+        </div>
 
         <div style={{display:'flex',gap:8,marginBottom:12}}>
           <select value={statusFilter} onChange={(e)=>setStatusFilter(e.target.value)}>
@@ -123,7 +157,8 @@ function App() {
                   <div style={{fontSize:12,color:'#6b7280'}}>{t.priority} • {t.assignedTo}</div>
                 </div>
               </div>
-              <div>
+              <div style={{display:'flex',gap:8}}>
+                <button onClick={() => toggleArchive(t)}>{t.archived ? 'Unarchive' : 'Archive'}</button>
                 <button onClick={() => remove(t.id)}>Delete</button>
               </div>
             </li>

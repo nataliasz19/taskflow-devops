@@ -7,7 +7,32 @@ app.use(cors());
 app.use(express.json());
 
 let tasks = [
-  { id: uuidv4(), title: 'Welcome to TaskFlow', completed: false, priority: 'Medium', assignedTo: 'Unassigned' }
+  {
+    id: "1",
+    title: "Prepare weekly operations report",
+    name: "Prepare weekly operations report",
+    completed: false,
+    status: "In Progress",
+    priority: "High",
+    startDate: "2026-01-01",
+    endDate: "",
+    targetDate: "2026-01-07",
+    assignedTo: "Alex Morgan (Operations Team)",
+    archived: false
+  },
+  {
+    id: "2",
+    title: "Update internal documentation",
+    name: "Update internal documentation",
+    completed: false,
+    status: "Not Started",
+    priority: "Medium",
+    startDate: "2026-01-03",
+    endDate: "",
+    targetDate: "2026-01-10",
+    assignedTo: "Sam Lee (Operations Team)",
+    archived: false
+  }
 ];
 
 // Get all tasks
@@ -17,11 +42,10 @@ app.get('/api/tasks', (req, res) => {
 
 // Create a task
 app.post('/api/tasks', (req, res) => {
-  const { title, priority, assignedTo } = req.body;
-  if (!title) return res.status(400).json({ error: 'Title is required' });
-  const allowed = ['Low', 'Medium', 'High'];
-  const pr = allowed.includes(priority) ? priority : 'Medium';
-  const task = { id: uuidv4(), title, completed: false, priority: pr, assignedTo: assignedTo || 'Unassigned' };
+  const task = {
+    id: Date.now().toString(),
+    ...req.body
+  };
   tasks.push(task);
   res.status(201).json(task);
 });
@@ -29,7 +53,7 @@ app.post('/api/tasks', (req, res) => {
 // Update a task
 app.put('/api/tasks/:id', (req, res) => {
   const { id } = req.params;
-  const { title, completed, priority, assignedTo } = req.body;
+  const { title, completed, priority, assignedTo, archived } = req.body;
   const task = tasks.find(t => t.id === id);
   if (!task) return res.status(404).json({ error: 'Task not found' });
   if (title !== undefined) task.title = title;
@@ -40,6 +64,7 @@ app.put('/api/tasks/:id', (req, res) => {
     task.priority = priority;
   }
   if (assignedTo !== undefined) task.assignedTo = assignedTo;
+  if (archived !== undefined) task.archived = archived;
   res.json(task);
 });
 
