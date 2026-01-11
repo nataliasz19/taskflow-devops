@@ -1,51 +1,78 @@
-# TaskFlow — Design Document
+ # DevOps Pipeline Application Ideation - Student Worksheet
 
-## Elevator pitch
-TaskFlow is a lightweight, team-focused task tracker designed to demonstrate CI/CD, Infrastructure as Code, and core DevOps practices. It is a minimal React SPA with a Node.js/Express API suitable for demos and learning labs.
+ ---
 
-## Target users & problem
-- Small teams, instructors, or demo audiences who need a realistic but simple app to show pipeline and infra practices.
-- Problem solved: provides a concise, runnable application surface for teaching and validating DevOps workflows.
+ ## Part 1: Individual Ideation
 
-## High-level architecture
-- Frontend: React SPA (containerised)
-- Backend: Node.js + Express REST API (containerised)
-- Data: in-memory for dev / SQLite for CI; PostgreSQL (RDS) in production
-- Deployment: Docker images pushed to ECR and deployed to ECS Fargate behind an ALB
-- Infra as code: Terraform to provision networking, ECS, RDS, IAM, and logging
-- CI/CD: GitHub Actions for lint/test/build and CD to push images + run Terraform
+ ### Your Application Concept
 
-## Core data model
-Each task includes:
+ **1. Basic Description**
 
-```json
-{
-  "id": "uuid",
-  "title": "Deploy backend service",
-  "completed": false,
-  "priority": "High",
-  "assignedTo": "Operations Team"
-[
-  {
-    "id": "uuid-1",
-    "title": "Prepare monthly operations report",
-    "completed": false,
-    "priority": "Medium",
-    "assignedTo": "Operations Team"
-  },
-  {
-    "id": "uuid-2",
-    "title": "Update internal knowledge base",
-    "completed": true,
-    "priority": "Low",
-    "assignedTo": "Bench Team"
-  },
-  {
-    "id": "uuid-3",
-    "title": "Review project onboarding checklist",
-    "completed": false,
-    "priority": "High",
-    "assignedTo": "Operations Team"
-  }
-]
+ What does your application do? (1–2 sentences)
+
+ TaskFlow is a lightweight, team-based task management web application that allows users to create, update, prioritise, assign, and complete operational tasks.
+ The application is intentionally minimal and is designed primarily to demonstrate CI/CD pipelines, Infrastructure as Code, and core DevOps practices rather than full product functionality.
+
+ Who would use it?
+
+ Small teams, operations teams, instructors, or demo audiences who require a simple but realistic application to support demonstrations of modern DevOps workflows.
+
+ ---
+
+ **2. Technical Architecture**
+
+ What technology stack are you considering?
+
+ - **Language/Framework:**  
+   Frontend: React (Single Page Application)  
+   Backend: Node.js with Express (REST API)
+
+ - **Database (if needed):**  
+   Development: In-memory store  
+   CI: SQLite  
+   Production: PostgreSQL (AWS RDS)
+
+ - **Other components:**  
+   Docker (containerisation)  
+   GitHub Actions (CI/CD)  
+   Terraform (Infrastructure as Code)  
+   AWS ECS Fargate (container orchestration)  
+   AWS CloudWatch (logging and monitoring)
+
+ Application type:
+ - [x] Single page
+ - [ ] Multi-page
+ - [x] API + Frontend
+ - [ ] Other: _________
+
+ ---
+
+ **3. Pipeline Opportunities**
+
+ | Pipeline Element | How my application enables this |
+ |-----------------|--------------------------------|
+ | **Source Control** | Source code is stored in a GitHub repository, enabling version control, collaboration, and rollback via commits and branches. |
+ | **Automated Testing** | Unit tests validate task creation, updates, status changes, and deletion, providing early feedback on code changes. |
+ | **Build Process** | Docker images are built for frontend and backend to ensure consistent and repeatable builds across environments. |
+ | **Infrastructure as Code** | Terraform provisions cloud resources such as networking, ECS services, load balancers, and databases in a reproducible manner. |
+ | **Deployment Automation** | GitHub Actions automatically deploy updated container images and infrastructure changes to AWS environments. |
+ | **Configuration Management** | Environment variables and secrets are managed per environment, separating configuration from application code. |
+ | **Monitoring/Logging** | Application and container logs are streamed to AWS CloudWatch for visibility, troubleshooting, and operational insight. |
+
+ ---
+
+ **4. Complexity Balance**
+
+ Is this simple enough to implement quickly but complex enough to demonstrate learning?
+
+ Yes. The application has a deliberately small feature set (task CRUD operations) while still supporting a complete DevOps lifecycle, including testing, containerisation, infrastructure provisioning, and automated deployment.
+
+ Confidence in implementing this:
+ - [ ] Low
+ - [ ] Medium
+ - [x] High
+
+ Why?
+
+ The application logic is minimal and well-defined, allowing effort to be focused on pipeline design, infrastructure automation, and deployment practices, which are the primary learning objectives of the assessment.
 

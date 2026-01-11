@@ -5,13 +5,44 @@
 }
 body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
 .App{min-height:100vh;background:var(--bg);display:flex;align-items:flex-start;justify-content:center;padding:40px}
-.container{width:100%;max-width:720px;background:var(--card);padding:24px;border-radius:8px;box-shadow:0 6px 18px rgba(16,24,40,0.08)}
+.container{width:100%;max-width:1100px;background:var(--card);padding:24px;border-radius:8px;box-shadow:0 6px 18px rgba(16,24,40,0.08);box-sizing:border-box}
 h1{margin:0 0 12px 0}
 .task-form{display:flex;gap:8px;margin-bottom:16px}
 .task-form input{flex:1;padding:8px 10px;border:1px solid #e6e9ef;border-radius:6px}
 .task-form button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer}
+
+.task-form .field-with-label{display:flex;flex-direction:column;min-width:150px}
+.task-form .field-with-label label{font-size:12px;color:#374151;margin-bottom:4px}
+.task-form .field-with-label input{padding:8px;border-radius:6px;border:1px solid #e6e9ef}
 .task-list{list-style:none;padding:0;margin:0}
 .task-list li{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f2f5}
 .task-list li.done span{text-decoration:line-through;color:#6b7280}
 .task-list label{display:flex;align-items:center;gap:8px}
 .task-list button{background:transparent;border:none;color:#ef4444;cursor:pointer}
+
+.task-headers{display:grid;grid-template-columns: minmax(220px,1fr) 80px 90px 110px 110px 110px 140px 90px;gap:12px;padding:8px 0;font-size:13px;color:#374151;border-bottom:2px solid #eef2ff}
+.task-row{display:grid;grid-template-columns: minmax(220px,1fr) 80px 90px 110px 110px 110px 140px 90px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid #f0f2f5}
+.priority-badge{display:inline-block;color:#fff;padding:6px 10px;border-radius:8px;font-size:13px}
+.task-row input[type='date']{padding:6px;border:1px solid #e6e9ef;border-radius:6px;width:100%;box-sizing:border-box}
+.task-list li.done .priority-badge{opacity:0.6}
+
+@media (max-width:900px){
+  .container{max-width:100%;padding:16px}
+  .task-headers, .task-row{grid-template-columns: minmax(160px,1fr) 72px 80px repeat(3, minmax(80px,100px)) 120px}
+  .task-headers div, .task-row > div{font-size:12px}
+}
+
+@media (max-width:620px){
+  .task-headers{display:none}
+  .task-row{grid-template-columns: auto;grid-template-rows: auto auto;gap:6px}
+  .task-row > div{display:block}
+  .task-row input[type='date']{width:50%}
+}
+
+.table-wrapper{overflow-x:auto;padding-bottom:8px}
+.task-headers div, .task-row > div{padding:4px 6px}
+.task-headers div{font-weight:600;text-transform:uppercase;font-size:12px;color:#374151}
+.task-headers div:first-child, .task-row > div:first-child{justify-self:start}
+.task-headers div:not(:first-child), .task-row > div:not(:first-child){justify-self:center}
+
+.status-select{padding:6px;border-radius:6px;border:1px solid #e6e9ef;background:#fff}

@@ -35,6 +35,49 @@ let tasks = [
   }
 ];
 
+// Additional seeded tasks
+tasks.push(
+  {
+    id: "3",
+    title: "Chase missing timesheets",
+    name: "Chase missing timesheets",
+    completed: false,
+    status: "Not Started",
+    priority: "High",
+    startDate: "",
+    endDate: "",
+    targetDate: "2026-01-15",
+    assignedTo: "Jamie Patel (Operations Team)",
+    archived: false
+  },
+  {
+    id: "4",
+    title: "Weekly counsellor detail update across systems",
+    name: "Weekly counsellor detail update across systems",
+    completed: false,
+    status: "In Progress",
+    priority: "Medium",
+    startDate: "2026-01-05",
+    endDate: "",
+    targetDate: "2026-01-20",
+    assignedTo: "Morgan Hughes (Operations Team)",
+    archived: false
+  },
+  {
+    id: "5",
+    title: "Prepare onboarding checklist for new starters",
+    name: "Prepare onboarding checklist for new starters",
+    completed: false,
+    status: "Not Started",
+    priority: "Low",
+    startDate: "",
+    endDate: "",
+    targetDate: "2026-01-25",
+    assignedTo: "Taylor Reed (Operations Team)",
+    archived: false
+  }
+);
+
 // Get all tasks
 app.get('/api/tasks', (req, res) => {
   res.json(tasks);
@@ -46,6 +89,8 @@ app.post('/api/tasks', (req, res) => {
     id: Date.now().toString(),
     ...req.body
   };
+  // Ensure Not Started tasks have empty startDate
+  if (task.status === 'Not Started') task.startDate = '';
   tasks.push(task);
   res.status(201).json(task);
 });
@@ -53,10 +98,11 @@ app.post('/api/tasks', (req, res) => {
 // Update a task
 app.put('/api/tasks/:id', (req, res) => {
   const { id } = req.params;
-  const { title, completed, priority, assignedTo, archived } = req.body;
+  const { title, name, completed, priority, assignedTo, archived, startDate, endDate, targetDate, status } = req.body;
   const task = tasks.find(t => t.id === id);
   if (!task) return res.status(404).json({ error: 'Task not found' });
   if (title !== undefined) task.title = title;
+  if (name !== undefined) task.name = name;
   if (completed !== undefined) task.completed = completed;
   if (priority !== undefined) {
     const allowed = ['Low', 'Medium', 'High'];
@@ -65,6 +111,20 @@ app.put('/api/tasks/:id', (req, res) => {
   }
   if (assignedTo !== undefined) task.assignedTo = assignedTo;
   if (archived !== undefined) task.archived = archived;
+  // If status is provided and is 'Not Started', clear startDate
+  if (status !== undefined) {
+    task.status = status;
+    if (status === 'Not Started') {
+      task.startDate = '';
+    }
+  }
+  // Only set startDate if status is not 'Not Started' (either current or incoming)
+  if (startDate !== undefined) {
+    if (task.status !== 'Not Started') task.startDate = startDate;
+    else task.startDate = '';
+  }
+  if (endDate !== undefined) task.endDate = endDate;
+  if (targetDate !== undefined) task.targetDate = targetDate;
   res.json(task);
 });
 

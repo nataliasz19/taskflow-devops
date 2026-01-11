@@ -14,6 +14,7 @@ function App() {
 
   const [priority, setPriority] = useState('Medium');
   const [assignedTo, setAssignedTo] = useState('');
+  const [targetDate, setTargetDate] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [showArchived, setShowArchived] = useState(false);
 
@@ -24,13 +25,14 @@ function App() {
       const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, priority, assignedTo }),
+        body: JSON.stringify({ title, priority, assignedTo, targetDate }),
       });
       const newTask = await res.json();
       setTasks((s) => [...s, newTask]);
       setTitle('');
       setPriority('Medium');
       setAssignedTo('');
+      setTargetDate('');
     } catch (err) {
       console.error(err);
     }
@@ -48,6 +50,28 @@ function App() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const updateTaskField = async (id, patch) => {
+    try {
+      const res = await fetch(`/api/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch),
+      });
+      const updated = await res.json();
+      setTasks((s) => s.map((t) => (t.id === updated.id ? updated : t)));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const priorityColor = (p) => {
+    if (!p) return '#6b7280';
+    if (p === 'High') return '#ef4444';
+    if (p === 'Medium') return '#f97316';
+    if (p === 'Low') return '#10b981';
+    return '#6b7280';
   };
 
   const remove = async (id) => {
@@ -113,6 +137,15 @@ function App() {
             onChange={(e) => setAssignedTo(e.target.value)}
             placeholder="Assigned to"
           />
+          <div className="field-with-label">
+            <label>Target date</label>
+            <input
+              type="date"
+              value={targetDate}
+              onChange={(e) => setTargetDate(e.target.value)}
+              title="Target date"
+            />
+          </div>
           <button type="submit">Add</button>
         </form>
 
@@ -147,23 +180,51 @@ function App() {
           </select>
         </div>
 
-        <ul className="task-list">
+        <div className="table-wrapper">
+          <div className="task-headers">
+            <div>Task</div>
+            <div>Priority</div>
+            <div>Status</div>
+            <div>Start</div>
+            <div>End</div>
+            <div>Target</div>
+            <div>Assigned</div>
+            <div>Actions</div>
+          </div>
+
+          <ul className="task-list">
           {filteredTasks.map((t) => (
             <li key={t.id} className={t.completed ? 'done' : ''}>
-              <div style={{display:'flex',alignItems:'center',gap:12}}>
-                <input type="checkbox" checked={t.completed} onChange={()=>toggle(t)} />
-                <div style={{textAlign:'left'}}>
-                  <div><strong>{t.title}</strong></div>
-                  <div style={{fontSize:12,color:'#6b7280'}}>{t.priority} • {t.assignedTo}</div>
+              <div className="task-row">
+                <div style={{display:'flex',alignItems:'center',gap:12}}>
+                  <input type="checkbox" checked={t.completed} onChange={()=>toggle(t)} />
+                  <div style={{textAlign:'left'}}>
+                    <div><strong>{t.title}</strong></div>
+                  </div>
                 </div>
-              </div>
-              <div style={{display:'flex',gap:8}}>
-                <button onClick={() => toggleArchive(t)}>{t.archived ? 'Unarchive' : 'Archive'}</button>
-                <button onClick={() => remove(t.id)}>Delete</button>
+                <div>
+                  <span className="priority-badge" style={{background: priorityColor(t.priority)}}>{t.priority}</span>
+                </div>
+                <div>
+                  <select className="status-select" value={t.status || 'Not Started'} onChange={(e)=>updateTaskField(t.id,{status:e.target.value})}>
+                    <option>Not Started</option>
+                    <option>In Progress</option>
+                    <option>Completed</option>
+                  </select>
+                </div>
+                <div><input type="date" value={t.startDate || ''} onChange={(e)=>updateTaskField(t.id,{startDate:e.target.value})} /></div>
+                <div><input type="date" value={t.endDate || ''} onChange={(e)=>updateTaskField(t.id,{endDate:e.target.value})} /></div>
+                <div><input type="date" value={t.targetDate || ''} onChange={(e)=>updateTaskField(t.id,{targetDate:e.target.value})} /></div>
+                <div style={{fontSize:13,color:'#374151'}}>{t.assignedTo}</div>
+                <div style={{display:'flex',gap:8}}>
+                  <button onClick={() => toggleArchive(t)}>{t.archived ? 'Unarchive' : 'Archive'}</button>
+                  <button onClick={() => remove(t.id)}>Delete</button>
+                </div>
               </div>
             </li>
           ))}
         </ul>
+        </div>
       </div>
     </div>
   );
