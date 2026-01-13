@@ -26,7 +26,7 @@ let tasks = [
     name: "Update internal documentation",
     completed: false,
     status: "Not Started",
-    priority: "Medium",
+    priority: "High",
     startDate: "2026-01-03",
     endDate: "",
     targetDate: "2026-01-10",
