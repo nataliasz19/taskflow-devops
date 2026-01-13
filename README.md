@@ -47,7 +47,7 @@ See `design.md` and `docs/api.md` for architecture and API details.
 ## Optional: Screenshot
 Add a screenshot of the running app (`client/src` UI) or paste a small JSON snippet of example tasks to make the README more illustrative.
 
-## Next steps for maintainers
+## The Next steps for maintainers
 - Add unit/integration tests for backend routes and frontend components.
 - Configure GitHub Actions secrets for CD (registry credentials, cloud provider credentials).
 - Expand `infra/` terraform modules to provision target cloud infrastructure.
