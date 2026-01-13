@@ -13,7 +13,7 @@ let tasks = [
     name: "Prepare weekly operations report",
     completed: false,
     status: "In Progress",
-    priority: "Medium",
+    priority: "High",
     startDate: "2026-01-01",
     endDate: "",
     targetDate: "2026-01-07",
