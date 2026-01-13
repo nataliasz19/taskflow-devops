@@ -1,10 +1,8 @@
- # DevOps Pipeline Application Ideation - Student Worksheet
+ # DevOps Pipeline Application Ideation 
 
  ---
 
- ## Part 1: Individual Ideation
-
- ### Your Application Concept
+ ### My Application Concept
 
  **1. Basic Description**
 
@@ -15,7 +13,7 @@
 
  Who would use it?
 
- Small teams, operations teams, instructors, or demo audiences who require a simple but realistic application to support demonstrations of modern DevOps workflows.
+ Small teams or demo audiences who need a minimal, realistic task-tracking application to support collaborative workflows and to showcase modern DevOps pipelines in a cloud environment.
 
  ---
 

@@ -19,10 +19,8 @@ npm start
 The frontend proxies API requests to `http://localhost:5000` when run locally.
 
 ## Example tasks
-You can use the seeded example tasks to demonstrate flows quickly.
 - Prepare monthly operations report (Medium priority, Alex Morgan)
 - Update internal documentation (Low priority, Sam Lee)
-- Review project onboarding checklist (High priority, Operations Team)
 
 You can also add your own tasks via the UI (add title, priority, assignee, and target date).
 
@@ -49,7 +47,8 @@ See `design.md` and `docs/api.md` for architecture and API details.
 ## Optional: Screenshot
 Add a screenshot of the running app (`client/src` UI) or paste a small JSON snippet of example tasks to make the README more illustrative.
 
-## Next steps for maintainers
+## The Next steps for maintainers
 - Add unit/integration tests for backend routes and frontend components.
 - Configure GitHub Actions secrets for CD (registry credentials, cloud provider credentials).
 - Expand `infra/` terraform modules to provision target cloud infrastructure.
+
