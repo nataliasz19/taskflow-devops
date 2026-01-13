@@ -26,7 +26,8 @@ jobs:
           docker build -t taskflow-client:latest client
 
       - name: Push images to ECR (placeholder)
-        run: echo "Push to ECR step: configure repository and credentials"
+        run: |
+          echo "Push to ECR step: configure repository and credentials"
 
       - name: Terraform apply (scaffold)
         working-directory: infra
