@@ -1,16 +1,18 @@
 # TaskFlow
 
-TaskFlow is a lightweight task-tracking demo application intended for teaching CI/CD, Infrastructure as Code, and DevOps practices. Users can create, update, and track tasks for an internal team (for example, an Operations Team) with fields such as priority, status, dates, and assignee. The app is intentionally minimal so it is easy to use in demos and learning labs.
+TaskFlow is a lightweight task-tracking application intended for teaching CI/CD, Infrastructure as Code, and DevOps practices. Taskflow is aimed at small teams (for example, an Operations Team) and users can create, update, track and archive tasks with fields such as priority, status, dates, and assignee. The goal is to provide a clean, minimal interface that supports internal team workflows while serving as a platform for demonstrating DevOps automation.
 
-## Quickstart (local)
+---
 
-Backend:
+## Quickstart (Local Development)
+
+### Backend
 ```bash
 cd Server
 node server.js
 ```
 
-Frontend (development):
+### Frontend
 ```bash
 cd client
 npm start
@@ -18,37 +20,96 @@ npm start
 
 The frontend proxies API requests to `http://localhost:5000` when run locally.
 
-## Example tasks
-- Prepare monthly operations report (Medium priority, Alex Morgan)
-- Update internal documentation (Low priority, Sam Lee)
+---
 
-You can also add your own tasks via the UI (add title, priority, assignee, and target date).
+## Example Tasks
+
+- Prepare monthly operations report (Medium priority, Alex Morgan)  
+- Update internal documentation (Low priority, Sam Lee)  
+
+You can add your own tasks via the UI.
+
+---
 
 ## CI/CD Pipeline
 
-- **CI** (`.github/workflows/ci.yml`) runs automatically on push or pull request. It installs dependencies, runs linting and tests, builds the frontend and backend artifacts, and stores build artifacts for later stages.
-- **CD** (`.github/workflows/cd.yml`) provides a scaffold to package Docker images and apply infrastructure changes via Terraform. When configured, secrets are supplied through GitHub Actions secrets and the workflow can push images to a registry and update cloud infrastructure (e.g., ECS + RDS).
+### Continuous Integration (CI)
 
-## Repo layout
-- `client/` — React SPA
-- `Server/` — Node.js Express API
-- `infra/` — Terraform scaffold
-- `.github/workflows/` — CI/CD workflow scaffolds
+The CI workflow (`.github/workflows/ci.yml`) runs automatically on push or pull request.  
+It performs:
 
-See `design.md` and `docs/api.md` for architecture and API details.
+- Dependency installation  
+- Linting  
+- Independent builds for the frontend and backend  
+- Validation of code changes  
 
-## Demo / Next Steps
-1. Start backend: `cd Server && node server.js`
-2. Start frontend: `cd client && npm start`
-3. View example tasks in the browser at `http://localhost:3000`
-4. Make a small UI change, commit & push → observe the CI workflow run on GitHub Actions
-5. Optional: configure the CD workflow and `infra/` to deploy to AWS ECS/Fargate (requires AWS credentials and registry access)
+This demonstrates Continuous Integration, fast feedback, and modular build stages.
 
-## Optional: Screenshot
-Add a screenshot of the running app (`client/src` UI) or paste a small JSON snippet of example tasks to make the README more illustrative.
+### Infrastructure as Code (IaC)
 
-## The Next steps for maintainers
-- Add unit/integration tests for backend routes and frontend components.
-- Configure GitHub Actions secrets for CD (registry credentials, cloud provider credentials).
-- Expand `infra/` terraform modules to provision target cloud infrastructure.
+The `infra/` directory contains Terraform configuration used to provision cloud infrastructure.  
+In the current setup, Terraform creates an Amazon S3 bucket used to host the built React frontend.
+
+### Deployment
+
+The frontend is deployed by uploading the React build output to the S3 bucket created by Terraform.  
+This mirrors common industry patterns for hosting static single‑page applications.
+
+Backend deployment is scaffolded for future extension.
+
+---
+
+## Repository Layout
+
+```
+client/               # React frontend (SPA)
+Server/               # Node.js + Express backend API
+infra/                # Terraform configuration (S3 hosting)
+.github/workflows/    # CI workflow
+```
+
+---
+
+## Demo / How to Use
+
+1. Start backend:
+   ```bash
+   cd Server && node server.js
+   ```
+
+2. Start frontend:
+   ```bash
+   cd client && npm start
+   ```
+
+3. View the application at:
+   ```
+   http://localhost:3000
+   ```
+
+4. Make a small code change and push to GitHub to observe the CI workflow run.
+
+5. Provision infrastructure with Terraform:
+   ```bash
+   cd infra
+   terraform init
+   terraform apply
+   ```
+
+6. Upload the React build to the S3 bucket to deploy the frontend.
+
+---
+
+## Next Steps for Maintainers
+
+- Add unit and integration tests for backend routes and frontend components  
+- Expand Terraform modules for backend deployment  
+- Add monitoring, logging, and automated tests  
+- Integrate advanced deployment strategies (such as blue‑green or canary releases)  
+- Configure GitHub Actions secrets for automated deployment  
+
+---
+
+
+
 
