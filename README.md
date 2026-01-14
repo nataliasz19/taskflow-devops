@@ -1,6 +1,6 @@
 # TaskFlow
 
-TaskFlow is a lightweight task-tracking application intended for teaching CI/CD, Infrastructure as Code, and DevOps practices. Taskflow is aimed at small teams (for example, an Operations Team) and users can create, update, track and archive tasks with fields such as priority, status, dates, and assignee. The goal is to provide a clean, minimal interface that supports internal team workflows while serving as a platform for demonstrating DevOps automation.
+TaskFlow is a lightweight task-tracking application intended for teaching CI/CD, Infrastructure as Code, and DevOps practices. Taskflow is aimed at small teams (for example, an Operations Team) and users can create, update, track and archive tasks with fields such as priority, status, dates, and assignee. The goal is to provide a clean, minimal interface that supports internal team workflows while serving as a platform for demonstrating DevOps automation. 
 
 ---
 
