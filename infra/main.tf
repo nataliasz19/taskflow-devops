@@ -12,8 +12,19 @@ provider "aws" {
   region = var.aws_region
 }
 
-# Example placeholder resource: S3 bucket (for demo only)
+# TaskFlow S3 bucket for frontend deployment
 resource "aws_s3_bucket" "taskflow_demo" {
   bucket = "taskflow-demo-${var.project_suffix}"
-  acl    = "private"
+  acl    = "public-read"
+
+  # Enable static website hosting for React app
+  website {
+    index_document = "index.html"
+    error_document = "index.html"
+  }
+
+  tags = {
+    Name        = "TaskFlow Demo"
+    Environment = "Dev"
+  }
 }
