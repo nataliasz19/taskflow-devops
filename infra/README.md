@@ -1,12 +1,22 @@
-# Infrastructure (Terraform) — scaffold
+# TaskFlow Infrastructure (Terraform)
 
-This folder contains a minimal Terraform scaffold for TaskFlow. It is intentionally small and intended as a starting point for provisioning in AWS (VPC, ECS, RDS, ECR).
+This folder contains Terraform configuration for TaskFlow, a lightweight task-tracking application. It defines the infrastructure required to deploy the frontend React application to AWS.
 
-Usage (local development / scaffold):
+## Overview
 
-1. Install Terraform.
-2. Configure AWS credentials (or set up OIDC in GitHub Actions).
-3. Update `variables.tf` with sensible defaults or use `-var` flags.
-4. `terraform init` then `terraform plan`.
+- **Infrastructure as Code**: Terraform is used to provision resources declaratively.
+- **Frontend Deployment**: The React frontend is deployed as static assets to an S3 bucket.
+- **Consistency & Reproducibility**: Using Terraform ensures all environments can be provisioned consistently and audited.
+- **CI/CD Integration**: Infrastructure provisioning is part of the automated workflow, demonstrating end-to-end DevOps practices.
 
-This scaffold does not apply real resources by default — it's a starting template for exercises.
+## Prerequisites
+
+- Terraform installed locally: [https://www.terraform.io/downloads](https://www.terraform.io/downloads)
+- AWS account and configured credentials (`aws configure`) or GitHub Actions OIDC setup.
+- React frontend built: run `npm run build` in the frontend folder.
+
+## Usage
+
+1. Navigate to this folder:
+   ```bash
+   cd infra
